@@ -15,6 +15,7 @@ signal rst : std_logic;
 --LFSR signals
 signal lfsr_enable : std_logic:= '0';
 signal lfsr_dout : std_logic;
+signal lfsr_dout_vld : std_logic;
 
 --Signals for enable generation
 constant CLK_1HZ_THRESHOLD : natural := 100e6; --Arty a7 clk 100MHz, so 100e6 clk ticks for one Hz
@@ -35,7 +36,8 @@ begin
 		clk => clk,
 		rst => rst,
 		enable => lfsr_enable,
-		dout => lfsr_dout 
+		dout => lfsr_dout, 
+		dout_valid => lfsr_dout_vld
 	);
 	
 	--genertes the enable signal to make LFSR progress at 1Hz

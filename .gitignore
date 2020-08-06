@@ -3,3 +3,7 @@ Blink/Blink/
 VGA/VGA/
 DVD screensaver/DVD screensaver
 LFSR/LFSR
+*.jou
+*.pb
+*.log
+LFSR/src/tb/xsim.dir/
