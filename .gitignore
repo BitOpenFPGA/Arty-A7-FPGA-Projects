@@ -8,3 +8,4 @@ LFSR/LFSR
 *.log
 LFSR/src/tb/xsim.dir/
 UART/UART
+AES 128/AES 128
