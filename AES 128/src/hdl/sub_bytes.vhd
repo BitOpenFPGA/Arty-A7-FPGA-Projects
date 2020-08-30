@@ -2,6 +2,9 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 
+
+
+--Performs the byte substitution for an entire block (or state). Substitution is done through a ROM.
 entity sub_bytes is 
 	port (	clk  : in std_logic;
 			i_enable : in std_logic;
@@ -9,10 +12,6 @@ entity sub_bytes is
 			o_data_block : out std_logic_vector(127 downto 0);
 			o_data_valid : out std_logic );
 end entity;
-
-
-
-
 
 architecture rtl of sub_bytes is 
 type sbox_out_t is array (0 to 15) of std_logic_vector(7 downto 0);
