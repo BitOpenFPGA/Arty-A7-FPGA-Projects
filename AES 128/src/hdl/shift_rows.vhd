@@ -27,7 +27,7 @@ o_data_block(63 downto 56) <= i_data_block(63 downto 56);
 o_data_block(31 downto 24) <= i_data_block(31 downto 24);
 
 --Second row of bytes: one cyclic left shift - byte 1,5,9,13 -> 5,9,13,1
-o_data_block(119 downto 112) <= i_data_block(78 downto 80); 
+o_data_block(119 downto 112) <= i_data_block(87 downto 80); 
 o_data_block(87 downto 80) <= i_data_block(55 downto 48);
 o_data_block(55 downto 48) <= i_data_block(23 downto 16);
 o_data_block(23 downto 16) <= i_data_block(119 downto 112);
