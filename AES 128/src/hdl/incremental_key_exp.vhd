@@ -53,39 +53,41 @@ begin
 key_schedule : process (clk) 
 begin 
 if rising_edge(clk) then
-	valid_sig_delay_line <= valid_sig_delay_line(1 downto 0) & i_prev_key_valid;
-	if i_prev_key_valid = '1' then
-		
-		-- End result should be
-		-- 4 32-bit word make up a round key 
-		-- w1 - sub(rot(w[i-1])) xor rcon(i/Nk)
-		-- w2 - w[i-1] xor w[i-nk]
-		-- w3 - w[i-1] xor w[i-nk]
-		-- w4 - w[i-1] xor w[i-nk]
-		
-		--first pipeline level
-		rot_sub_word <= sbox_rom(to_integer(unsigned(i_prev_key(23 downto 16)))) & sbox_rom(to_integer(unsigned(i_prev_key(15 downto 8)))) & sbox_rom(to_integer(unsigned(i_prev_key(7 downto 0)))) & sbox_rom(to_integer(unsigned(i_prev_key(31 downto 24))));
-		word1_l0 <= i_prev_key(127 downto 96);
-		word2_l0 <= i_prev_key(95 downto 64) xor (rcon_rom(ROUND_NUMBER) & x"000000");
-		word3_l0 <= i_prev_key(63 downto 32);
-		word4_l0 <= i_prev_key(31 downto 0);
-		
+	if rst = '1' then
+		valid_sig_delay_line <= (others => '0');
+	else
+		valid_sig_delay_line <= valid_sig_delay_line(1 downto 0) & i_prev_key_valid;
+		if i_prev_key_valid = '1' then
+			
+			-- End result should be a round key made up of
+			-- 4 32-bit words where:
+			-- w1 - sub(rot(w[i-1])) xor rcon(i/Nk)
+			-- w2 - w[i-1] xor w[i-nk]
+			-- w3 - w[i-1] xor w[i-nk]
+			-- w4 - w[i-1] xor w[i-nk]
+			
+			--first pipeline level
+			rot_sub_word <= sbox_rom(to_integer(unsigned(i_prev_key(23 downto 16)))) & sbox_rom(to_integer(unsigned(i_prev_key(15 downto 8)))) & sbox_rom(to_integer(unsigned(i_prev_key(7 downto 0)))) & sbox_rom(to_integer(unsigned(i_prev_key(31 downto 24))));
+			word1_l0 <= i_prev_key(127 downto 96);
+			word2_l0 <= i_prev_key(95 downto 64) xor (rcon_rom(ROUND_NUMBER) & x"000000");
+			word3_l0 <= i_prev_key(63 downto 32);
+			word4_l0 <= i_prev_key(31 downto 0);
+			
+		end if;
+			
+			
+		-- Second pipeline level
+		word1_l1 <= word1_l0 xor rot_sub_word xor (rcon_rom(ROUND_NUMBER) & x"000000"); -- done
+		word2_l1 <= word2_l0 xor word1_l0 xor rot_sub_word; -- done
+		word3_l1 <= word3_l0; -- i_prev_key(127 downto 96) xor rot_sub_word xor i_prev_key(63 downto 32), need 
+		word4_l1 <= word4_l0; 
+			
+		-- Output - third pipeline level
+		if valid_sig_delay_line(1) = '1' then
+			o_round_key <= word1_l1 & word2_l1 & (word3_l1 xor word2_l1) & (word3_l1 xor word2_l1 xor word4_l1);
+		end if;
 	end if;
-		
-		
-	-- Second pipeline level
-	word1_l1 <= word1_l0 xor rot_sub_word xor (rcon_rom(ROUND_NUMBER) & x"000000"); -- done
-	word2_l1 <= word2_l0 xor word1_l0 xor rot_sub_word; -- done
-	word3_l1 <= word3_l0; -- i_prev_key(127 downto 96) xor rot_sub_word xor i_prev_key(63 downto 32), need 
-	word4_l1 <= word4_l0; 
-		
-	-- Output - third pipeline level
-	if valid_sig_delay_line(1) = '1' then
-		o_round_key <= word1_l1 & word2_l1 & (word3_l1 xor word2_l1) & (word3_l1 xor word2_l1 xor word4_l1);
-	end if;
-
-end if;		
-	
+end if;			
 end process;
 
 o_round_key_valid <= valid_sig_delay_line(valid_sig_delay_line'high);

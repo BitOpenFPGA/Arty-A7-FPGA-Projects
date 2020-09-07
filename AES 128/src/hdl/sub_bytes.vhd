@@ -7,6 +7,7 @@ use IEEE.numeric_std.all;
 --Performs the byte substitution for an entire block (or state). Substitution is done through a ROM.
 entity sub_bytes is 
 	port (	clk  : in std_logic;
+			rst  : in std_logic;
 			i_enable : in std_logic;
 			i_data_block : in std_logic_vector(127 downto 0);
 			o_data_block : out std_logic_vector(127 downto 0);
@@ -42,15 +43,18 @@ begin
 sub_bytes : process (clk)
 begin
 	if rising_edge(clk) then
-		if i_enable = '1' then
-			for I in 0 to 15 loop
-				sbox_out(I) <= sbox_rom(to_integer(unsigned(i_data_block((I+1)*8-1 downto I*8))));
-			end loop;
-			o_data_valid <= '1';
-		else 
+		if rst = '1' then 
 			o_data_valid <= '0';
+		else
+			if i_enable = '1' then
+				for I in 0 to 15 loop
+					sbox_out(I) <= sbox_rom(to_integer(unsigned(i_data_block((I+1)*8-1 downto I*8))));
+				end loop;
+				o_data_valid <= '1';
+			else 
+				o_data_valid <= '0';
+			end if;
 		end if;
-	
 	end if;
 
 end process;
