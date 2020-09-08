@@ -2,7 +2,7 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 
---UART tramsit with no parity bit, 1 stop bit. Default values 8 bit data width, baud rate 9600, system clock frequency 50 MHz 
+--UART tramsit with no parity bit, 1 stop bit. Default values 8 bit data width, baud rate 9600, system clock frequency 100 MHz 
 entity UART_TX is
 	generic	(	BAUD_RATE : integer := 9600;
 				DATA_WIDTH : integer := 8;
