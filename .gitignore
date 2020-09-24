@@ -9,3 +9,4 @@ LFSR/LFSR
 LFSR/src/tb/xsim.dir/
 UART/UART
 AES 128/AES 128
+AES 128/scripts/xsim.dir/
