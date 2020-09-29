@@ -5,12 +5,12 @@ use IEEE.numeric_std.all;
 entity AES_128 is
 port (	clk : in std_logic;
 		rst : in std_logic;
-		i_cipher_key : in std_logic_vector(127 downto 0);
+		i_key : in std_logic_vector(127 downto 0);
 		i_new_key_valid : in std_logic;
-		i_plain_text : in std_logic_vector(127 downto 0);
-		i_plain_text_valid : in std_logic;
-		o_cipher_text : out std_logic_vector(127 downto 0);
-		o_cipher_text_valid : out std_logic
+		i_plaintext : in std_logic_vector(127 downto 0);
+		i_plaintext_valid : in std_logic;
+		o_ciphertext : out std_logic_vector(127 downto 0);
+		o_ciphertext_valid : out std_logic
 	);
 end entity;
 
@@ -20,7 +20,7 @@ architecture rtl of AES_128 is
 type round_key_arr_t is array (0 to 9) of std_logic_vector(127 downto 0);
 signal round_key_arr : round_key_arr_t;
 
--- State is the wire for the 128 bit block of plain text through the first 9 "normal" rounds as well as 
+-- State is the wire for the 128 bit block of plaintext through the first 9 "normal" rounds as well as 
 -- the components for the last round, including the delay line
 type state_arr_t is array (0 to 13) of std_logic_vector(127 downto 0);
 signal state_arr : state_arr_t;
@@ -36,8 +36,8 @@ key_expansion0 : entity work.key_expansion
 	port map (
 			clk => clk,
 			rst => rst,
-			i_cipher_key => i_cipher_key,
-			i_cipher_key_valid => i_new_key_valid, 
+			i_key => i_key,
+			i_key_valid => i_new_key_valid, 
 			o_round_key_0 => round_key_arr(0), 
 			o_round_key_1 => round_key_arr(1),
 			o_round_key_2 => round_key_arr(2),				
@@ -56,9 +56,9 @@ add_init_key : entity work.add_round_key
 	port map (
 		clk => clk,
 		rst => rst,
-		i_data_valid => i_plain_text_valid,
-		i_round_key => i_cipher_key,
-		i_data_block => i_plain_text,
+		i_data_valid => i_plaintext_valid,
+		i_round_key => i_key,
+		i_data_block => i_plaintext,
 		o_data_block => state_arr(0),
 		o_data_valid => rounds_valid_arr(0)
 	);
@@ -125,8 +125,8 @@ add_round_key_last : entity work.add_round_key
 		i_data_valid => last_round_valid_arr(3),
 		i_round_key => round_key_arr(9),
 		i_data_block => state_arr(13),
-		o_data_block => o_cipher_text,
-		o_data_valid => o_cipher_text_valid
+		o_data_block => o_ciphertext,
+		o_data_valid => o_ciphertext_valid
 	);
 
 

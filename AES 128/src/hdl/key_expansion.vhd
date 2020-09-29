@@ -5,8 +5,8 @@ use IEEE.numeric_std.all;
 entity key_expansion is 
 port (	clk : in std_logic;
 		rst : in std_logic;
-		i_cipher_key : in std_logic_vector(127 downto 0);
-		i_cipher_key_valid: in std_logic;
+		i_key : in std_logic_vector(127 downto 0);
+		i_key_valid: in std_logic;
 		o_round_key_0 : out std_logic_vector(127 downto 0);
 		o_round_key_1 : out std_logic_vector(127 downto 0);
 		o_round_key_2 : out std_logic_vector(127 downto 0);				
@@ -32,8 +32,8 @@ signal delayed_valid_arr : std_logic_vector(10 downto 0); --delayed 1 clock cycl
 
 begin
 
-valid_arr(0) <= i_cipher_key_valid;
-round_key_arr(0) <= i_cipher_key;
+valid_arr(0) <= i_key_valid;
+round_key_arr(0) <= i_key;
 
 key_expansion: for I in 0 to 9 generate
 

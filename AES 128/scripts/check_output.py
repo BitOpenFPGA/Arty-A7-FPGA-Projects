@@ -21,7 +21,7 @@ for test in test_names:
 		with open(uut_output_path,'r') as fp_uut_output:
 			
 			
-			# Multi message test is formatted with whole output on a single line, whereas testbench output has 128 bits per line
+			# Multi message test is formatted with whole output relatin to a single key on a single line, whereas testbench output has 128 bits per line
 			if test == "ECBMMT128":
 				for idx, ref_line in enumerate(fp_ref_output):
 					for num_block in range(idx+1):
