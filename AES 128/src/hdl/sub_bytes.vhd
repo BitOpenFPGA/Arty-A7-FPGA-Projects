@@ -19,7 +19,7 @@ type sbox_out_t is array (0 to 15) of std_logic_vector(7 downto 0);
 signal sbox_out : sbox_out_t;
 
 type sbox_rom_t is array (0 to 255) of std_logic_vector(7 downto 0);
-constant sbox_rom : sbox_rom_t := (
+signal sbox_rom : sbox_rom_t := (
 x"63", x"7c", x"77", x"7b", x"f2", x"6b", x"6f", x"c5", x"30", x"01", x"67", x"2b", x"fe", x"d7", x"ab", x"76",
 x"ca", x"82", x"c9", x"7d", x"fa", x"59", x"47", x"f0", x"ad", x"d4", x"a2", x"af", x"9c", x"a4", x"72", x"c0",
 x"b7", x"fd", x"93", x"26", x"36", x"3f", x"f7", x"cc", x"34", x"a5", x"e5", x"f1", x"71", x"d8", x"31", x"15",
@@ -37,7 +37,8 @@ x"70", x"3e", x"b5", x"66", x"48", x"03", x"f6", x"0e", x"61", x"35", x"57", x"b
 x"e1", x"f8", x"98", x"11", x"69", x"d9", x"8e", x"94", x"9b", x"1e", x"87", x"e9", x"ce", x"55", x"28", x"df",
 x"8c", x"a1", x"89", x"0d", x"bf", x"e6", x"42", x"68", x"41", x"99", x"2d", x"0f", x"b0", x"54", x"bb", x"16"
 );    
-
+--attribute rom_style : string;
+--attribute rom_style of sbox_rom : signal is "distributed";
 
 begin
 sub_bytes : process (clk)
